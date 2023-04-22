@@ -16,7 +16,7 @@ public class MovieController{
     MovieService service = new MovieService();
 
     //1
-    @PostMapping("/movies/add-movie")
+    @PostMapping("POST/movies/add-movie")
     public ResponseEntity addMovie(@RequestBody Movie movie){
         try{
             service.addMovie(movie);    
@@ -27,7 +27,7 @@ public class MovieController{
     }
 
     //2
-    @PostMapping("/movies/add-director")
+    @PostMapping("POST/movies/add-director")
     public ResponseEntity addDirector(@RequestBody Director director){
         try{
             service.addDirector(director);
@@ -38,7 +38,7 @@ public class MovieController{
     }
 
     //3
-    @PutMapping("/movies/add-movie-director-pair")
+    @PutMapping("PUT/movies/add-movie-director-pair")
     public ResponseEntity addMovieDirectorPair(@RequestParam String movie,@RequestParam String director){
         try{
             service.addMovieDirectorPair(movie,director);
@@ -49,7 +49,7 @@ public class MovieController{
     }
 
     //4
-    @GetMapping("/movies/get-movie-by-name/{name}")
+    @GetMapping("GET/movies/get-movie-by-name/{name}")
     public ResponseEntity getMovieByName(@PathVariable String name){
         try{
             Movie movie = service.getMovieByName(name);
@@ -60,7 +60,7 @@ public class MovieController{
     }
 
     //5
-    @GetMapping("/movies/get-director-by-name/{name}")
+    @GetMapping("GET/movies/get-director-by-name/{name}")
     public ResponseEntity getDirectorByName(@PathVariable String name){
         try{
             Director director = service.getDirectorByName(name);
@@ -72,7 +72,7 @@ public class MovieController{
 
 
     //6
-    @GetMapping("/movies/get-movies-by-director-name/{director}")
+    @GetMapping("GET/movies/get-movies-by-director-name/{director}")
     public ResponseEntity getMoviesByDirectorName(@PathVariable String director){
         try{
             List<String> listmovies = service.getMoviesByDirectorName(director);
@@ -84,7 +84,7 @@ public class MovieController{
 
 
     //7
-    @GetMapping("/movies/get-all-movies")
+    @GetMapping("GET/movies/get-all-movies")
     public ResponseEntity findAllMovies(){
         try{
             List<Movie> list = service.findAllMovies();
@@ -95,7 +95,7 @@ public class MovieController{
     }
 
     //8
-    @DeleteMapping("/movies/delete-director-by-name")
+    @DeleteMapping("DELETE/movies/delete-director-by-name")
     public ResponseEntity deleteDirectorByName(@RequestParam String directorName){
         try{
             service.deleteDirectorByName(directorName);
@@ -107,7 +107,7 @@ public class MovieController{
 
 
     //9
-    @DeleteMapping("movies/delete-all-directors")
+    @DeleteMapping("DELETE/movies/delete-all-directors")
     public ResponseEntity deleteAllDirectors(){
         try{
             service.deleteAllDirectors();

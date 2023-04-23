@@ -3,9 +3,13 @@ package com.driver;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.ArrayList;
 
+@Repository
 public class MovieRepository{
     Map<String,Movie> movies = new HashMap<>();
     Map<String,Director> directors = new HashMap<>();

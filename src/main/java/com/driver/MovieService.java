@@ -1,9 +1,15 @@
 package com.driver;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class MovieService{
-    MovieRepository repo = new MovieRepository();
+    @Autowired
+    MovieRepository repo;
     public void addMovie(Movie movie){ 
         Optional<Boolean> opt = repo.addMovie(movie);
         if(opt.isPresent()){

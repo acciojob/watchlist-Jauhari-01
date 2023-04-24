@@ -19,104 +19,122 @@ public class MovieController{
     MovieService service;
 
     //1
-    @PostMapping("POST/movies/add-movie")
+    @PostMapping("/movies/add-movie")
     public ResponseEntity addMovie(@RequestBody Movie movie){
         try{
             service.addMovie(movie);    
             return new ResponseEntity("Movie added successfully",HttpStatus.OK);
         }catch(ExceptionMovieAlreadyExist e){
             return new ResponseEntity("Movie added successfully",HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }        
     }
 
     //2
-    @PostMapping("POST/movies/add-director")
+    @PostMapping("/movies/add-director")
     public ResponseEntity addDirector(@RequestBody Director director){
         try{
             service.addDirector(director);
             return new ResponseEntity("Director added successfully",HttpStatus.OK);
         }catch(ExceptionDirectorAlreadyExist e){
             return new ResponseEntity("Movie added successfully",HttpStatus.BAD_REQUEST);
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
     //3
-    @PutMapping("PUT/movies/add-movie-director-pair")
+    @PutMapping("/movies/add-movie-director-pair")
     public ResponseEntity addMovieDirectorPair(@RequestParam String movie,@RequestParam String director){
         try{
             service.addMovieDirectorPair(movie,director);
             return new ResponseEntity("Director added successfully",HttpStatus.OK);
+        }catch(ExceptionMovieExistInRecord e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
         }catch(Exception e){
-            return new ResponseEntity("Movie added successfully",HttpStatus.BAD_REQUEST);
-        }
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
     //4
-    @GetMapping("GET/movies/get-movie-by-name/{name}")
+    @GetMapping("/movies/get-movie-by-name/{name}")
     public ResponseEntity getMovieByName(@PathVariable String name){
         try{
             Movie movie = service.getMovieByName(name);
             return new ResponseEntity(movie,HttpStatus.OK);
         }catch (ExceptionGetMovieByName e){
             return new ResponseEntity("Movie added successfully",HttpStatus.BAD_REQUEST);
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
     //5
-    @GetMapping("GET/movies/get-director-by-name/{name}")
+    @GetMapping("/movies/get-director-by-name/{name}")
     public ResponseEntity getDirectorByName(@PathVariable String name){
         try{
             Director director = service.getDirectorByName(name);
             return new ResponseEntity(director,HttpStatus.OK);
         }catch (ExceptionGetDirectorByName e){
             return new ResponseEntity("Director not found",HttpStatus.BAD_REQUEST);
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
 
     //6
-    @GetMapping("GET/movies/get-movies-by-director-name/{director}")
+    @GetMapping("/movies/get-movies-by-director-name/{director}")
     public ResponseEntity getMoviesByDirectorName(@PathVariable String director){
         try{
             List<String> listmovies = service.getMoviesByDirectorName(director);
             return new ResponseEntity(listmovies, HttpStatus.OK);
         }catch(ExceptionGetDirectorByName e){
             return new ResponseEntity("Director not found",HttpStatus.valueOf(404));
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
 
     //7
-    @GetMapping("GET/movies/get-all-movies")
+    @GetMapping("/movies/get-all-movies")
     public ResponseEntity findAllMovies(){
         try{
             List<Movie> list = service.findAllMovies();
             return new ResponseEntity(list, HttpStatus.OK);
         }catch(ExceptionMovieEmpty e){
             return new ResponseEntity("there is no movies present in database",HttpStatus.BAD_REQUEST);
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
     //8
-    @DeleteMapping("DELETE/movies/delete-director-by-name")
+    @DeleteMapping("/movies/delete-director-by-name")
     public ResponseEntity deleteDirectorByName(@RequestParam String directorName){
         try{
             service.deleteDirectorByName(directorName);
             return new ResponseEntity("Successfully done", HttpStatus.OK);
         }catch(ExceptionDirectorEmpty e){
             return new ResponseEntity("there is no Director present in database",HttpStatus.BAD_REQUEST);
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 
 
     //9
-    @DeleteMapping("DELETE/movies/delete-all-directors")
+    @DeleteMapping("/movies/delete-all-directors")
     public ResponseEntity deleteAllDirectors(){
         try{
             service.deleteAllDirectors();
             return new ResponseEntity("Successfully done", HttpStatus.OK);
         }catch(ExceptionDataEmpty e){
             return new ResponseEntity("there is no Director present in database",HttpStatus.BAD_REQUEST);
-        }
+        }catch(Exception e){
+            return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } 
     }
 }

@@ -11,9 +11,15 @@ import java.util.ArrayList;
 
 @Repository
 public class MovieRepository{
-    Map<String,Movie> movies = new HashMap<>();
-    Map<String,Director> directors = new HashMap<>();
-    Map<String,List<String>> data = new HashMap<>();
+    Map<String,Movie> movies;
+    Map<String,Director> directors;
+    Map<String,List<String>> data;
+
+    public MovieRepository(){
+        this.movies = new HashMap<>();
+        this.directors = new HashMap<>();
+        this.data = new HashMap<>();
+    }
 
     public Optional<Boolean> addMovie(Movie movie){
         if(movies.containsKey(movie.getName())){

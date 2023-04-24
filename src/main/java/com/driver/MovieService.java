@@ -1,86 +1,79 @@
 package com.driver;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-@Service
-public class MovieService{
-    @Autowired
-    MovieRepository repo;
-    public void addMovie(Movie movie){ 
-        Optional<Boolean> opt = repo.addMovie(movie);
+public class MovieService {
+    MovieRepository repo = new MovieRepository();
+    public boolean addMovie(Movie movie) throws movieAlredyPresentException {
+        Optional<Movie> opt = repo.ischeckmovie(movie.getName());
         if(opt.isPresent()){
-            return;
-        }else{
-            throw new ExceptionMovieAlreadyExist(movie);
-        } 
-    }
-    public void addDirector(Director director){
-        Optional<Boolean> opt = repo.addDirector(director);
-        if(opt.isPresent()){
-            return;
-        }else{
-            throw new ExceptionDirectorAlreadyExist(director);
-        } 
-    }
-    public void addMovieDirectorPair(String movie,String director){
-        Optional<Boolean> opt = repo.addMovieDirectorPair(movie,director);
-        if(opt.isPresent()){
-            return;
-        }else{
-            throw new ExceptionMovieExistInRecord(movie,director);
-        } 
-    }
-    public Movie getMovieByName(String name) {
-        Optional<Movie> optionalVar = repo.getMovieByName(name);
-        if(optionalVar.isPresent()){
-            return optionalVar.get();
-        }else{
-            throw new ExceptionGetMovieByName(name);
+            throw new movieAlredyPresentException();
         }
+        return repo.addMovie(movie);
+    }
+
+    public boolean addDirector(Director director) throws directorAlreadyPresent {
+        Optional<Director> opt = repo.ischeckdirector(director.getName());
+        if(opt.isPresent()){
+            throw new directorAlreadyPresent();
+        }
+        return repo.addDirector(director);
+    }
+
+    public boolean addMovieDirectorPair(String moviename, String directorname) throws MovieOrDirectornotpresentException {
+        Optional<Movie> optm = repo.ischeckmovie(moviename);
+        Optional<Director> optd = repo.ischeckdirector(directorname);
+        if(optm.isEmpty() || optd.isEmpty()){
+            throw new MovieOrDirectornotpresentException();
+        }
+       return repo.addMovieDirectorPair(moviename,directorname);
+    }
+
+    public Movie getMovieByName(String moviename) {
+        Optional<Movie> m = repo.ischeckmovie(moviename);
+        if(m.isPresent()){
+            return m.get();
+        }
+        return new Movie();
     }
     public Director getDirectorByName(String name) {
-        Optional<Director> optionalVar = repo.getDirectorByName(name);
-        if(optionalVar.isPresent()){
-            return optionalVar.get();
-        }else{
-            throw new ExceptionGetMovieByName(name);
+        Optional<Director> m = repo.ischeckdirector(name);
+        if(m.isPresent()){
+            return m.get();
+        }
+        return new Director();
+    }
+
+    public List<String> getMoviesByDirectorName(String name) {
+        List<String> movies = repo.getMoviesByDirectorName(name);
+        return movies;
+    }
+
+    public List<String> findAllMovies() {
+        List<String> m = repo.findAllMovies();
+        return m;
+    }
+
+    public void deleteDirectorByName(String director) {
+        List<String> movies = repo.getMoviesByDirectorName(director);
+        repo.deletedirector(director);
+        for(String x:movies){
+           repo.deletemovies(x);
+        }
+    }
+    public void deleteAllDirector() {
+        List<String> dir = repo.getallDirector();
+        for(String x:dir){
+            List<String> mo = repo.getMoviesByDirectorName(x);
+            repo.deletedirector(x);
+            for(String y :mo){
+                repo.deletemovies(y);
+            }
         }
     }
 
-    public List<String> getMoviesByDirectorName(String directorName){
-        Optional<List<String>> optVar = repo.getMoviesByDirectorName(directorName);
-        if(optVar.isPresent()){
-            return optVar.get();
-        }else{
-            throw new ExceptionGetDirectorByName(directorName);
-        }
-    }
-    public List<Movie> findAllMovies() {
-        Optional<List<Movie>> op = repo.findAllMovies();
-        if(op.isPresent()){
-            return op.get();
-        }else{
-            throw new ExceptionMovieEmpty();
-        }
-    }
-    public void deleteDirectorByName(String dName) {
-        Optional<Boolean> op = repo.deleteDirectorByName(dName);
-        if(op.isPresent()){
-            return;
-        }else{
-            throw new ExceptionDirectorEmpty(dName);
-        }
-    }
-    public void deleteAllDirectors() {
-        Optional<Boolean> op = repo.deleteAllDirectors();
-        if(op.isPresent()){
-            return;
-        }else{
-            throw new ExceptionDataEmpty();
-        }
-    }
 }

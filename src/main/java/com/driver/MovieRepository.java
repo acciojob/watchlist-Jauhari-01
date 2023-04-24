@@ -1,118 +1,66 @@
 package com.driver;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import org.springframework.stereotype.Repository;
+public class MovieRepository {
+    HashMap<String, ArrayList<String>> pair = new HashMap<>();
+    HashMap<String,Movie> movies = new HashMap<>();
+    HashMap<String,Director> directors = new HashMap<>();
 
-import java.util.List;
-import java.util.ArrayList;
-
-@Repository
-public class MovieRepository{
-    Map<String,Movie> movies;
-    Map<String,Director> directors;
-    Map<String,List<String>> data;
-
-    public MovieRepository(){
-        this.movies = new HashMap<>();
-        this.directors = new HashMap<>();
-        this.data = new HashMap<>();
-    }
-
-    public Optional<Boolean> addMovie(Movie movie){
-        if(movies.containsKey(movie.getName())){
-            return Optional.empty();
-        }
+    public boolean addMovie(Movie movie) {
         movies.put(movie.getName(),movie);
-        return Optional.of(true);
+        return true;
     }
-    public Optional<Boolean> addDirector(Director director){
-        if(directors.containsKey(director.getName())){
-            return Optional.empty();
+
+    public Optional<Movie> ischeckmovie(String moviename) {
+        if(movies.containsKey(moviename)){
+            return Optional.of(movies.get(moviename));
         }
+        return Optional.empty();
+    }
+
+    public Optional<Director> ischeckdirector(String directorname) {
+        if(directors.containsKey(directorname)){
+            return Optional.of(directors.get(directorname));
+        }
+        return Optional.empty();
+    }
+
+    public boolean addDirector(Director director) {
         directors.put(director.getName(),director);
-        return Optional.of(true);
+        return true;
     }
 
-    public Optional<Boolean> addMovieDirectorPair(String movieName,String directorName){
-        
-        if(data.get(directorName).contains(movieName)){
-            return Optional.empty();
+    public boolean addMovieDirectorPair(String moviename, String directorname) {
+        if(pair.containsKey(directorname)){
+            pair.get(directorname).add(moviename);
         }
-        if(data.get(directorName).size()==0){
-            List<String> temp = new ArrayList<>();
-            data.put(directorName,temp);
+        else{
+            ArrayList<String> tmp = new ArrayList<>();
+            tmp.add(moviename);
+            pair.put(directorname,tmp);
         }
-        data.get(directorName).add(movieName);
-        return Optional.of(true);
-    }
-    public Optional<Movie> getMovieByName(String name) {
-        if(movies.containsKey(name)){
-            return Optional.of(movies.get(name));
-        }else{
-            return Optional.empty();
-        }
-    }
-    public Optional<Director> getDirectorByName(String name) {
-        if(directors.containsKey(name)){
-            return Optional.of(directors.get(name));
-        }else{
-            return Optional.empty();
-        }
+        return true;
     }
 
-    public Optional<List<String>> getMoviesByDirectorName(String directorName){
-        if(data.containsKey(directorName)){
-            return Optional.of(data.get(directorName));
-        }else{
-            return Optional.empty();
-        }
+    public List<String> getMoviesByDirectorName(String name) {
+        return pair.get(name);
     }
-    public Optional<List<Movie>> findAllMovies() {
-        if(movies.isEmpty()){
-            return Optional.empty();
-        }else{
-            return Optional.of( new ArrayList<>(movies.values()));
-        }
-    }
-    public Optional<Boolean> deleteDirectorByName(String dName) {
-        if(!directors.containsKey(dName)){
-            return Optional.empty();
-        }else{
-            List<String> movieList = data.get(dName);
-            for(int i=0 ; i<movieList.size() ; i++){
-                String movieName = movieList.get(i);
-                if(movies.containsKey(movieName)){
-                    movies.remove(movieName);
-                }
-            }
-            if(directors.containsKey(dName)){
-                directors.remove(dName);
-            }
-            data.remove(dName);
-            return Optional.of(true);
-        }
-    }
-    public Optional<Boolean> deleteAllDirectors() {
-        if(data.isEmpty()){
-            return Optional.empty();
-        }
 
-        for(String dir : data.keySet()){
-            List<String> movieList = data.get(dir);
-            for(int i=0 ; i<movieList.size() ; i++){
-                String movieName = movieList.get(i);
-                if(movies.containsKey(movieName)){
-                    movies.remove(movieName);
-                }
-            }
-            if(directors.containsKey(dir)){
-                directors.remove(dir);
-            }
-            data.remove(dir);
-        }
-        return Optional.of(true);
+    public List<String> findAllMovies() {
+        return new ArrayList<>(movies.keySet());
+    }
+
+    public void deletedirector(String director) {
+        directors.remove(director);
+        pair.remove(director);
+    }
+
+    public void deletemovies(String x) {
+        movies.remove(x);
+    }
+
+    public List<String> getallDirector() {
+        return new ArrayList<>(directors.keySet());
     }
 }
